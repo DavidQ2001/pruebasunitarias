@@ -2,22 +2,38 @@ package org.aguzman.junit5app.ejemplos.models;
 import static org.junit.jupiter.api.Assertions.*;
 import org.aguzman.junit5app.ejemplos.exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 
 import java.math.BigDecimal;
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
 class CuentaTest {
 
     Cuenta cuenta;
-    @BeforeEach
+    @BeforeEach//Este metodo se usa para la inicializacion de todos los metodos
     void initMetodoTest(){
         this.cuenta = new Cuenta("Andres", new BigDecimal("1000.2322"));
         System.out.println("iniciando el metodo");
 
     }
 
-    @AfterEach
+    @AfterEach//Este metodo se utiliza para la finalizacion de todos los metodos
     public void tearDown(){
         System.out.println("se ha terminado el metodo");
+    }
+
+    @BeforeAll
+    //Este metodo se utiliza para la inicializacion del proyecto y se
+    //ejecuta una sola vez
+    static void beforeAll() {
+        System.out.println("inicializando el test");
+    }
+
+    @AfterAll
+    //Este metodo se utiliza para la finalizacion del proyecto y se
+    //ejecuta una sola vez
+    static void afterAll() {
+        System.out.println("finalizando el test");
     }
 
     @Test
@@ -33,7 +49,6 @@ class CuentaTest {
 
     @Test
     void testSaldoCuenta() {
-        cuenta = new Cuenta("Andres", new BigDecimal("1000.2322"));
         assertNotNull(cuenta.getSaldo());
         assertEquals(1000.2322, cuenta.getSaldo().doubleValue());
         assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0);
@@ -131,4 +146,41 @@ class CuentaTest {
 
 
     }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void testSoloWindows(){
+
+    }
+
+    @Test
+    @EnabledOnOs({OS.LINUX,OS.MAC})
+    void testSoloLinuxMac(){
+
+    }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void testNoWindows(){
+
+    }
+
+    @Test//este metodo se ejecuta
+    @EnabledOnJre(JRE.JAVA_8)
+    void soloJdk8(){
+
+    }
+
+    @Test//este metodo no se ejecuta,queda desabilitado
+    @EnabledOnJre(JRE.JAVA_10)
+    void soloJdk10(){
+
+    }
+
+    @Test
+    @DisabledOnJre(JRE.JAVA_8)
+    void testNoJDK8(){
+
+    }
+
 }
